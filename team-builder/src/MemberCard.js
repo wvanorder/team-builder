@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Icon } from 'antd';
 
 const Card = styled.div`
-width: 90%;
+width: 30%;
 max-width: 400px;
 height: 200px;
 background-color: tomato;
-margin: 20px 0px;
+margin: 20px 20px;
 `
 
 export default function MemberCard(props) {
@@ -23,7 +24,7 @@ export default function MemberCard(props) {
                 {props.member.id}, {props.member.team}
             </h6>
 
-            <button onClick={() => {props.setMember(props.member)}}>Edit Member</button>
+            <button onClick={() => {props.setMember(props.member)}}> <Icon type="edit" />Edit Member</button>
         </Card>
     )
 }

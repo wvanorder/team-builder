@@ -1,17 +1,23 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
 import styled from 'styled-components';
-import Form from './Form';
+import Form, {Formz} from './Form';
 import MemberCard from'./MemberCard';
 import 'antd/dist/antd.css';
 
-import { Tabs } from 'antd';
+import { Tabs, Radio } from 'antd';
 
 const { TabPane } = Tabs;
 
 function callback(key) {
   console.log(key);
 }
+
+const TabPanez=styled(TabPane)`
+display: flex;
+flex-flow: row wrap;
+justify-content: space-evenly;
+`
 
 
 const Header = styled.div`
@@ -30,7 +36,7 @@ const Side = styled.div`
   width: 25%;
   height: 100vh
   text-align: center;
-  background-color: mediumaquamarine;
+  background-color: tomato;
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
@@ -40,14 +46,16 @@ const Middle = styled.div`
 width: 50%;
 height: 100vh
 text-align: center;
-background-color: tomato;
+background-color: mediumaquamarine;
 
 `
 
 function App() {
 
   const [team, changeTeam] = useState([]);
+
   const [teams, addTeams] = useState(['Team1', 'Team2', 'Team3']);
+  const [newTeam, changeNewTeam] = useState('');
 
   const [teamMember, changeTeamMember] = useState({
     name: '',
@@ -57,6 +65,16 @@ function App() {
     id: 0,
   });
 
+  const changeTeamHandler = e => {
+    console.log(newTeam);
+    changeNewTeam(e.target.value)
+  };
+
+  const addNewTeam = e => {
+    e.preventDefault();
+    addTeams([...teams, newTeam]);
+  }
+
 
   const [memberToEdit, setMemberToEdit] = useState('');
 
@@ -65,12 +83,10 @@ function App() {
   }
 
   const changeHandler = e => {
-    console.log(teamMember);
     changeTeamMember({...teamMember, [e.target.name]: e.target.value});
   };
 
   const changeEditHandler = e => {
-    console.log(teamMember);
     setMemberToEdit({...memberToEdit, [e.target.name]: e.target.value});
   };
 
@@ -104,17 +120,35 @@ function App() {
   return (
     <div>
       <Header>
-        TEAM
+        <h1>The Best Team Builder App ever made</h1>
       </Header>
       <Appz>
         <Side>
-          <form>
+          <h2> Add a New Team!</h2>
+          <Formz onSubmit={addNewTeam}>
             <input name="team"
-            placeholder="add a team" />
-          </form>
+            placeholder="add a team"
+            value={newTeam}
+            onChange={changeTeamHandler} />
+            <button>Add new Team</button>
+          </Formz>
         </Side>
         <Middle>
-          <Form 
+        <Tabs defaultActiveKey="Team1" onChange={callback}>
+              {teams.map(teamz => {
+                return <TabPanez tab={teamz} key={teamz}>
+                {team.map(mate => {
+                  if(mate.team === teamz){
+                    return <MemberCard member={mate} setMember={setMember} />
+                  }
+                })}
+                </TabPanez>
+              })}
+          </Tabs>
+        </Middle>
+        <Side>
+          <h2>Team Member Form</h2>
+        <Form 
           teamMember={teamMember} 
           changeTeamMember={changeTeamMember}
           changeHandler={changeHandler}
@@ -124,19 +158,7 @@ function App() {
           updateMember={updateMember}
           teams={teams}
           />
-        </Middle>
-        <Side>
-          <Tabs defaultActiveKey="Team1" onChange={callback}>
-              {teams.map(teamz => {
-                return <TabPane tab={teamz} key={teamz}>
-                {team.map(mate => {
-                  if(mate.team === teamz){
-                    return <MemberCard member={mate} setMember={setMember} />
-                  }
-                })}
-                </TabPane>
-              })}
-          </Tabs>
+          
         </Side>
     </Appz>
     </div>
